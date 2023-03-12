@@ -5,8 +5,7 @@
 #include <M5GFX.h>
 #include <UNIT_GLASS.h>
 
-#define ROTATION_SPEED 2
-
+#define ROTATION_SPEED 10
 #define MAX_LCD_SIZE 10000
 #define MAX_GLASS_SIZE 2400
 
