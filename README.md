@@ -19,9 +19,7 @@ You can use Left and Right button to zoom and dezoom.
 
 Enjoy !
 
-[![M5Stack Glass Unit demo]
-(https://img.youtube.com/vi/oIZuK3P--ns/maxresdefault.jpg)]
-(https://www.youtube.com/watch?v=oIZuK3P--ns&ab_channel=ArmelFAUVEAU)
+[![M5Stack Glass Unit demo](https://img.youtube.com/vi/oIZuK3P--ns/maxresdefault.jpg)](https://www.youtube.com/watch?v=oIZuK3P--ns)
 
 
 # Donations
