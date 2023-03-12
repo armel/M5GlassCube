@@ -14,7 +14,8 @@ M5GFX display;
 
 LGFX_Sprite cubeSprite(&display);
 
-boolean btnA, btnB, btnC;
+boolean btnLcdA, btnLcdB, btnLcdC;
+boolean btnGlassA, btnGlassB; 
 
 float px[] = {-1, 1, 1, -1, -1, 1, 1, -1};
 float py[] = {-1, -1, 1, 1, -1, -1, 1, 1};
@@ -25,14 +26,21 @@ int16_t p2y[] = {0, 0, 0, 0, 0, 0, 0, 0};
 
 float r[] = {0, 0, 0};
 
-float zoom = 1;
+float zoomLcd = 1;
+float zoomGlass = 1;
 
 void getButton()
 {
+    // Manage buttons on M5Stack Lcd
     M5.update();
-    btnA = M5.BtnA.isPressed();
-    btnB = M5.BtnB.isPressed();
-    btnC = M5.BtnC.isPressed();
+
+    btnLcdA = M5.BtnA.isPressed();
+    btnLcdB = M5.BtnB.isPressed();
+    btnLcdC = M5.BtnC.isPressed();
+
+    // Manage buttons on M5Stack Glass Unit
+    glass.getKeyA() == 0 ? btnGlassA = true :  btnGlassA = false;
+    glass.getKeyB() == 0 ? btnGlassB = true :  btnGlassB = false;    
 }
 
 void drawCube(uint8_t type, uint16_t width, int16_t height, int16_t size)
@@ -62,7 +70,7 @@ void drawCube(uint8_t type, uint16_t width, int16_t height, int16_t size)
         p2y[i] = (int16_t)(height / 2 + ay * size / az);
     }
 
-    if (type == 0) // M5Stack screen
+    if (type == 0) // M5Stack Lcd screen
     {
         cubeSprite.clear();
         for (uint8_t i = 0; i < 3; i++)
@@ -102,14 +110,14 @@ void setup()
 {
     M5.begin();
 
-    // M5 Lcd
+    // M5Stack Lcd
     display.begin();
     display.clear();
 
     cubeSprite.setColorDepth(8);
     cubeSprite.createSprite(240, 240);
 
-    // M5 Glass Unit
+    // M5Stack Glass Unit
     glass.begin(&Wire, GLASS_ADDR, 21, 22, 100000UL);
     glass.clear();
 }
@@ -118,20 +126,33 @@ void loop()
 {
     getButton();
 
-    if(btnA)
+    // Manage zoom on M5Stack Lcd
+    if(btnLcdA)
     {
-        zoom -= 0.01;   
-        if (zoom < 0) zoom = 0;     
+        zoomLcd -= 0.01;   
+        if (zoomLcd < 0) zoomLcd = 0;     
     }
-    else if(btnC)
+    else if(btnLcdC)
     {
-        zoom += 0.01;
-        if (zoom > 1) zoom = 1;    
+        zoomLcd += 0.01;
+        if (zoomLcd > 1) zoomLcd = 1;    
     }
 
-    //Serial.printf("%d %d %d %f\n", btnA, btnB, btnC, zoom);
+    // Manage zoom on M5Stack Glass Unit
+    if(btnGlassA)
+    {
+        zoomGlass += 0.01;
+        if (zoomGlass > 1) zoomGlass = 1;    
+    }
+    else if(btnGlassB)
+    {
+        zoomGlass -= 0.01;
+        if (zoomGlass < 0) zoomGlass = 0;     
+    }
 
-    drawCube(0, 240, 240, MAX_LCD_SIZE * zoom);
-    drawCube(1, 128, 58, MAX_GLASS_SIZE * zoom);
+    //Serial.printf("Lcd %d %d %d %f / Glass %d %d %f\n", btnLcdA, btnLcdB, btnLcdC, zoomLcd, btnGlassA, btnGlassB, zoomGlass);
+
+    drawCube(0, 240, 240, MAX_LCD_SIZE * zoomLcd);
+    drawCube(1, 128, 58, MAX_GLASS_SIZE * zoomGlass);
     delay(ROTATION_SPEED);
 }
