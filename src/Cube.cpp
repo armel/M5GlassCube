@@ -2,6 +2,11 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full
 // license information.
 
+// Connect the Unit_Glass to Port A.
+// On Unit_Gass, press the buttons on the left/right side of the Unit Glass to
+// zoom/dezoom the 3D cube. On M5Stack, press the buttons left/right of the
+// M5Stack to zoom/dezoom the 3D cube.
+
 #include <M5Stack.h>
 #include <M5GFX.h>
 #include <UNIT_GLASS.h>
@@ -130,12 +135,21 @@ void loop() {
     }
 
     // Manage zoom on M5Stack Glass Unit
-    if (btnGlassA) {
-        zoomGlass += 0.01;
-        if (zoomGlass > 1) zoomGlass = 1;
-    } else if (btnGlassB) {
-        zoomGlass -= 0.01;
-        if (zoomGlass < 0) zoomGlass = 0;
+    if (btnGlassA || btnGlassB) {
+        if (btnGlassA) {
+            zoomGlass += 0.01;
+            if (zoomGlass > 1) zoomGlass = 1;
+        } else if (btnGlassB) {
+            zoomGlass -= 0.01;
+            if (zoomGlass < 0) zoomGlass = 0;
+        }
+        // Sound alert in limit
+        if (zoomGlass == 0 || zoomGlass == 1) {
+            glass.setBuzzer(1200, 8);
+            glass.enable_buzz();
+            delay(50);
+            glass.disable_buzz();
+        }
     }
 
     // Serial.printf("Lcd %d %d %d %f / Glass %d %d %f\n", btnLcdA, btnLcdB,
