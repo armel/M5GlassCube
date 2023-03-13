@@ -89,22 +89,18 @@ void UNIT_GLASS::draw_point(uint8_t x, uint8_t y, uint8_t mode) {
 void UNIT_GLASS::draw_line(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2,
                            uint8_t mode) {
     uint8_t data[5];
-
-    if(y2 < y1) {
+    if (y2 < y1) {
         data[0] = x2;
         data[1] = y2;
         data[2] = x1;
         data[3] = y1;
-    }
-    else
-    {
+    } else {
         data[0] = x1;
         data[1] = y1;
         data[2] = x2;
         data[3] = y2;
     }
     data[4] = mode;
- 
     writeBytes(_addr, GLASS_DRAW_LINE_REG, data, 5);
 }
 
